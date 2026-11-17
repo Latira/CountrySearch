@@ -25,14 +25,19 @@ test('mapCountryResponse правильно переводит сырые дан
   ]);
 });
 
-
 describe('searchCountries', () => {
+  let fetchSpy: any;
+
   beforeEach(() => {
-    jest.restoreAllMocks();
+    fetchSpy = jest.spyOn(global, 'fetch');
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
   });
 
   test('должен выбрасывать HttpError со статусом, если ответ сервера неуспешный (например, 500)', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
+    fetchSpy.mockResolvedValue({
       ok: false,
       status: 500,
     } as Response);
@@ -41,7 +46,7 @@ describe('searchCountries', () => {
   });
 
   test('должен возвращать пустой массив при статусе 404', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
+    fetchSpy.mockResolvedValue({
       ok: false,
       status: 404,
     } as Response);
@@ -49,4 +54,25 @@ describe('searchCountries', () => {
     const result = await searchCountries('UnknownCountry');
     expect(result).toEqual([]);
   });
+
+  test('должен корректно пробрасывать AbortError при отмене запроса извне', async () => {
+    const controller = new AbortController();
+    
+    fetchSpy.mockImplementation(() => {
+      return Promise.reject(new DOMException('The user aborted a request.', 'AbortError'));
+    });
+
+    controller.abort();
+    await expect(searchCountries('Spain', controller.signal)).rejects.toThrow(
+      expect.objectContaining({ name: 'AbortError' })
+    );
+  });
+
+  test('должен выбрасывать TimeoutError, если сервер отвечает слишком долго', async () => {
+    fetchSpy.mockImplementation(() => new Promise(() => {}));
+
+    await expect(searchCountries('TimeoutCountry')).rejects.toThrow(
+      expect.objectContaining({ name: 'TimeoutError' })
+    );
+  }, 10000);
 });
