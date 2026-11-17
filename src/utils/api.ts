@@ -17,3 +17,22 @@ export function mapCountryResponse(raw: any): Country[] {
     population: item.population || 0,
   }));
 }
+
+export class HttpError extends Error {
+  constructor(public status: number) {
+    super(`HTTP Error: ${status}`);
+    this.name = 'HttpError';
+  }
+}
+
+export async function searchCountries(query: string, signal?: AbortSignal): Promise<any[]> {
+  if (!query.trim()) return [];
+  const response = await fetch(`https://countries.dev{encodeURIComponent(query)}`, { signal });
+  if (!response.ok) {
+    if (response.status === 404) {
+      return [];
+    }
+    throw new HttpError(response.status);
+  }
+  return await response.json();
+}
