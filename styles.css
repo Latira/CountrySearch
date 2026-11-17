@@ -1,0 +1,36 @@
+body { 
+  max-width: 600px; 
+  margin: 40px auto; 
+  padding: 0 20px; 
+}
+
+.search-input { 
+  width: 100%; 
+  padding: 12px; 
+  font-size: 16px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+}
+
+.loader { 
+  display: none; 
+  margin: 10px 0; 
+  color: #666; 
+  font-style: italic; 
+}
+
+.results { 
+  margin-top: 20px; 
+}
+
+.country-card { 
+  padding: 10px; 
+  border-bottom: 1px solid #eee; 
+}
+
+.error-box { 
+  color: red; 
+  margin-top: 10px; 
+  display: none; 
+}

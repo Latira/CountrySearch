@@ -28,7 +28,7 @@ export class HttpError extends Error {
 export async function searchCountries(query: string, signal?: AbortSignal): Promise<any[]> {
   if (!query.trim()) return [];
 
-  const response = await fetch(`https://countries.dev{encodeURIComponent(query)}`, { signal });
+  const response = await fetch(`https://countries.dev/name/${encodeURIComponent(query)}`, { signal });
 
   if (!response.ok) {
     if (response.status === 404) {
