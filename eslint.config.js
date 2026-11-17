@@ -1,4 +1,8 @@
-import tsParser from "@typescript-eslint/parser";
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+const tsParser = require('@typescript-eslint/parser');
+
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import configPrettier from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";

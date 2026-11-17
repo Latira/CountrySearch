@@ -1,1 +1,1 @@
-npx --no-install lint-staged
+cmd.exe /c "npm run lint-staged"
