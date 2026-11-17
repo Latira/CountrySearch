@@ -44,7 +44,7 @@ async function performSearch(query: string) {
     loader.style.display = 'none';
 
     if (countries.length === 0) {
-      resultsContainer.appendChild(el('div', 'Friendly 404: Nothing found'));
+      resultsContainer.appendChild(el('div', 'Nothing found'));
       return;
     }
 
@@ -61,7 +61,16 @@ async function performSearch(query: string) {
     loader.style.display = 'none';
     resultsContainer.replaceChildren();
     errorBox.style.display = 'block';
-    errorBox.textContent = `Error loaded: ${error.message || 'Unknown network error'}`;
+    errorBox.replaceChildren();
+    const errorText = el('span', 'Network error. Please check your connection. ', 'error-message-text');
+    const retryButton = el('button', 'Повторить', 'retry-button');
+    
+    retryButton.addEventListener('click', () => {
+      performSearch(searchInput.value);
+    });
+    
+    errorBox.appendChild(errorText);
+    errorBox.appendChild(retryButton);
   }
 }
 
